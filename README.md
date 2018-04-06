@@ -53,3 +53,26 @@ Ctrl-C from the window in which you brought the containers up is sufficient to l
 terminal window, by running:
 
 `docker-compose down`
+
+### Working with the running containers
+
+Some useful commands that are helpful to work with these containers while they are running:
+
+**Open up a bash shell for working within a container**: 
+
+`docker exec -it <container-name> /bin/bash`
+
+For example, let's say you want to use the mysql client within the mysql container to look around the database a bit:
+
+1. `docker ps` - will show you the names of which containers are running.  Typically mysql will be in **openboxesdocker_db_1** if build like described above
+2. `docker exec -it openboxesdocker_db_1 /bin/bash` - this will put you into a bash shell __inside__ the container.  It will look something like `root@d7e7bd809849:/#`
+3. `mysql -u openboxes -p openboxes` - Now that you are inside the container, you can run the normal slew of mysql commands as if it is local
+
+**Tail the log file of a particular container**
+
+`docker logs -f <container-name>` (see https://docs.docker.com/engine/reference/commandline/logs/)
+
+For example, let's say you want to tail the Tomcat/Grails logs":
+
+1. `docker ps` - will show you the names of which containers are running.  Typically grails will be in **openboxesdocker_grails_1** if build like described above
+2. `docker logs -f openboxesdocker_grails_1` - will tail the log file.  Hit Ctrl-C to exit.
