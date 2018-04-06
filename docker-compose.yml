@@ -1,0 +1,26 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: openboxes
+      MYSQL_USER: openboxes
+      MYSQL_PASSWORD: openboxes
+    volumes:
+      - ./openboxes-mysql.cnf:/etc/mysql/conf.d/openboxes-mysql.cnf
+    ports:
+      - "3306:3306"
+
+  grails:
+    build: ./grails-java7
+    command: sh /root/openboxes-run.sh
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./openboxes-config.properties:/root/.grails/openboxes-config.properties
+      - ./openboxes-setenv.sh:/usr/share/tomcat7/bin/setenv.sh
+      - ./openboxes-run.sh:/root/openboxes-run.sh
+      - ../openboxes:/app
+    depends_on:
+      - db
