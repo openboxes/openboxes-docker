@@ -5,6 +5,13 @@ dockerized services together (in this case MySQL and Grails), and maintaining co
 
 If you haven't already done do, you will need to [Install Docker](https://docs.docker.com/) and [Install Docker Compose](https://docs.docker.com/compose/)
 
+### Pre-requisite:
+
+```
+git clone https://github.com/openboxes/openboxes.git         ## switch to whatever version you're using
+git clone https://github.com/openboxes/openboxes-docker.git
+```
+
 ### Step 1:  Adjust the include configuration files as needed
 
 Although this docker-compose project should work without modification, there may be occasions when you would like more control over the
