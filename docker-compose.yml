@@ -1,7 +1,7 @@
-version: "3"
+version: "2"
 services:
   db:
-    image: mysql:5.6
+    image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: openboxes
@@ -9,18 +9,14 @@ services:
       MYSQL_PASSWORD: openboxes
     volumes:
       - ./openboxes-mysql.cnf:/etc/mysql/conf.d/openboxes-mysql.cnf
-    ports:
-      - "3306:3306"
+      - ./mysql/:/var/lib/mysql/
 
-  grails:
-    build: ./grails-java7
-    command: sh /root/openboxes-run.sh
+  tomcat:
+    image: tomcat:7
     ports:
-      - "8080:8080"
+      - "8072:8080"
     volumes:
+      - ../openboxes.war:/usr/local/tomcat/webapps/openboxes.war
       - ./openboxes-config.properties:/root/.grails/openboxes-config.properties
-      - ./openboxes-setenv.sh:/usr/share/tomcat7/bin/setenv.sh
-      - ./openboxes-run.sh:/root/openboxes-run.sh
-      - ../openboxes:/app
-    depends_on:
-      - db
+    environment:
+      CATALINA_OPTS: "$CATALINA_OPTS -server -Xms512m -Xmx1024m -XX:MaxPermSize=256m -Djava.security.egd=file:/dev/./urandom"
