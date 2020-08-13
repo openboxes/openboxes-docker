@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     git \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Grails and Set Path
