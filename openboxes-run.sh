@@ -5,4 +5,5 @@ if [ ! -f /app/web-app/WEB-INF/applicationContext.xml ]; then
    grails upgrade --force
 fi
 
+npm i
 grails run-app
