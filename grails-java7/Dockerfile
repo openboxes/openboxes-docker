@@ -8,7 +8,7 @@ ENV SDKMAN_DIR /root/.sdkman
 ENV GRAILS_VERSION 1.3.9
 
 # Install Base Packages required and Node
-
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 RUN apt-get update && apt-get install -y curl zip python g++ make gcc build-essential \
     && curl -sL https://deb.nodesource.com/setup_13.x | bash - \
     && apt-get install -y nodejs \
@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y curl zip python g++ make gcc build-esse
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN curl -s "https://get.sdkman.io" | bash
 RUN chmod a+x "$SDKMAN_DIR/bin/sdkman-init.sh"
-
 
 # change timeout and max time based on your liking and internet speed
 RUN set -x \
