@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # grails doesn't run without it for some reason
-export GRAILS_OPTS="-XX:-UseSplitVerifier -Xverify:none"
+export GRAILS_OPTS="-XX:MaxPermSize=8192m -Xmx8192M -XX:-UseSplitVerifier -Xverify:none"
 
 if [ ! -f /app/web-app/WEB-INF/applicationContext.xml ]; then
    echo "Forcing grails upgrade"
@@ -16,7 +16,7 @@ npm config set engine-strict true
 # npm update
 
 # some dependencies don't get resolved on thier own
-npm i --no-package-lock --legacy-peer-deps --force --verbose --stacktrace
+npm i --no-package-lock --legacy-peer-deps --force --verbose --stacktrace --unsafe-perm
 grails run-app --stacktrace
 
 # if you want to compile enable this and stop grails run-app
