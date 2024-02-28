@@ -1,18 +1,23 @@
-FROM openjdk:7-jdk
+FROM azul/zulu-openjdk:7u352-7.56.0.11
 
-MAINTAINER Michael Seaton <mseaton@pih.org>
+LABEL maintainer="Michael Seaton mseaton@pih.org"
 
 # Environment variables
 
 ENV SDKMAN_DIR /root/.sdkman
 ENV GRAILS_VERSION 1.3.9
+ENV NODE_VERSION=14.21.3
 
-# Install Base Packages required and Node
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
-RUN apt-get update && apt-get install -y curl zip python g++ make gcc build-essential \
-    && curl -sL https://deb.nodesource.com/setup_13.x | bash - \
-    && apt-get install -y nodejs \
-    && curl -L https://www.npmjs.com/install.sh | sh
+
+# Install Base Packages required
+RUN apt-get update && apt-get install -y curl zip python2 g++ make gcc build-essential git
+
+# Download node + extract
+RUN curl -LO https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz &&\
+    tar -xvf node-v${NODE_VERSION}-linux-x64.tar.xz
+
+# Update our PATH to include the node binary
+ENV PATH=${PATH}:/node-v${NODE_VERSION}-linux-x64/bin
 
 # Install Grails and Set Path
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
@@ -37,10 +42,11 @@ RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && sdk install grails $GRAILS
 RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && sdk default grails $GRAILS_VERSION"
 
 # set envs
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/zulu7-ca-amd64
 ENV GRAILS_HOME /root/.sdkman/candidates/grails/current
 ENV PATH $GRAILS_HOME/bin:$PATH
-ENV GRAILS_OPTS -XX:-UseSplitVerifier -Xverify:none
+# Memory settings were required or else things would fail with OOM errors or stall forever
+ENV GRAILS_OPTS -XX:MaxPermSize=8192m -Xmx8192M -XX:-UseSplitVerifier -Xverify:none
 
 # Set the directory that an existing Grails app should be mounted into with a volume
 RUN mkdir /app

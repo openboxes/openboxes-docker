@@ -1,7 +1,8 @@
 version: "3"
 services:
   db:
-    image: mysql:5.7
+    image: mysql:5.7.44
+    platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: openboxes
@@ -15,6 +16,7 @@ services:
   grails:
     build: ./grails-java7
     command: sh /root/openboxes-run.sh
+    platform: linux/amd64
     ports:
       - "8080:8080"
     volumes:
